@@ -124,7 +124,9 @@ x-casaos:
   index: /v1/publicip/ip
   scheme: http
   port_map: "8000"
-  icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/gluetun.png
+  # Local copy: white background + padding
+  # (source: https://raw.githubusercontent.com/Aerya/Gluetun-Companion/refs/heads/main/assets/logo.png)
+  icon: https://raw.githubusercontent.com/dieppon/zimaos-app-store/master/Apps/gluetun/icon.png
   title:
     en_US: Gluetun VPN
   tagline:

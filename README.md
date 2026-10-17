@@ -60,9 +60,19 @@ description, icon, and links. The rules that matter (also documented in
 | Data paths | Put persistent data in `/DATA/AppData/<app-folder>/...` (the standard CasaOS/ZimaOS data location). |
 | User mapping | Use `PUID: $PUID`, `PGID: $PGID`, `TZ: $TZ` — these are provided by CasaOS/ZimaOS. |
 
-Icons: a PNG URL works best (e.g. from
-[selfhst/icons](https://github.com/selfhst/icons)). SVG works too, but then the
-build needs `rsvg-convert` (see below).
+Icons: a PNG works best. Each app keeps its own icon next to its compose file
+(`Apps/<folder>/icon.png`) — **512×512 PNG, white background, ~10 % padding on
+every side** (iOS-style) — and the compose points at it with an absolute URL:
+
+```yaml
+icon: https://raw.githubusercontent.com/dieppon/zimaos-app-store/master/Apps/<folder>/icon.png
+```
+
+The builder picks that file up locally, copies it into the app's `assets/` and
+rewrites the field to the published URL, so the build never needs the network
+for icons. Icon sources are [selfhst/icons](https://github.com/selfhst/icons) or
+the app's own repo. A raw SVG URL works too, but then the build needs
+`rsvg-convert` (see below) and clients get an `.svg`.
 
 ## Building the store output
 

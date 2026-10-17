@@ -71,7 +71,8 @@ x-casaos:
   index: /
   scheme: http
   port_map: "5825"
-  icon: https://raw.githubusercontent.com/Jonny-Ponny/metadata-docker/main/frontend/src/assets/icon.png
+  # Local copy: white background + padding (source: the app's own repo icon)
+  icon: https://raw.githubusercontent.com/dieppon/zimaos-app-store/master/Apps/metadata-docker/icon.png
   title:
     en_US: Metadata Docker
   tagline:

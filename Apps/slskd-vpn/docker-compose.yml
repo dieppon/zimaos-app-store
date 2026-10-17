@@ -61,7 +61,8 @@ x-casaos:
   index: /
   scheme: http
   port_map: "5030"
-  icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/slskd.png
+  # Local copy: white background + padding (source: selfhst/icons)
+  icon: https://raw.githubusercontent.com/dieppon/zimaos-app-store/master/Apps/slskd-vpn/icon.png
   title:
     en_US: slskd
   tagline:
