@@ -18,6 +18,8 @@ zimaos-app-store/
 ├── Apps/                        # one folder per app (the store's content)
 │   ├── gluetun/
 │   │   └── docker-compose.yml   # runtime config + x-casaos metadata
+│   ├── metadata-docker/
+│   │   └── docker-compose.yml
 │   ├── musicbrainz-picard/
 │   │   └── docker-compose.yml
 │   ├── slskd-vpn/
@@ -129,6 +131,7 @@ https://dieppa.co.uk/zimaos-app-store/store/main.zip
 | App | Category | Port | Image |
 | --- | --- | --- | --- |
 | Gluetun VPN | Networking | — (headless; publishes 8888/8388/9091/51413/5030/5031/50300) | `qmcgaw/gluetun:v3.41.3` |
+| Metadata Docker | Media | 8889 | `ghcr.io/jonny-ponny/metadata-docker:1.0.4` |
 | MusicBrainz Picard | Media | 5800 | `jlesage/musicbrainz-picard:v26.10.2` |
 | Transmission | Media | 9091 (via Gluetun) | `linuxserver/transmission:4.1.3` |
 | slskd | Media | 5030 (via Gluetun) | `slskd/slskd:0.26.1` |

@@ -1,0 +1,107 @@
+name: metadata-docker
+
+services:
+  metadata-docker:
+    image: ghcr.io/jonny-ponny/metadata-docker:1.0.4@sha256:9f53f6c70bd40cb73b38c6fdf614d010864e214317bede5752fff3eed150bc49
+    container_name: metadata-docker
+    environment:
+      # Change the login before exposing this app
+      - AUTH_USERNAME=admin
+      - AUTH_PASSWORD=change-me-asap
+      - TOKEN_EXPIRE_HOURS=24
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+    volumes:
+      # Music library — read/write so metadata edits are saved back
+      - type: bind
+        source: /media/Main-Storage/Media/Music
+        target: /music
+      # Application logs
+      - type: bind
+        source: /DATA/AppData/metadata-docker/logs
+        target: /logs
+      # Metadata fetcher addons (existing plugins or your own)
+      - type: bind
+        source: /DATA/AppData/metadata-docker/addons
+        target: /app/addons
+    ports:
+      # Host 8889 because 8888 is already used by the Gluetun VPN app
+      - target: "5000"
+        published: "8889"
+        protocol: tcp
+    restart: unless-stopped
+    x-casaos:
+      envs:
+        - container: AUTH_USERNAME
+          description:
+            en_US: "Web login username (change it)"
+        - container: AUTH_PASSWORD
+          description:
+            en_US: "Web login password (change it!)"
+        - container: TOKEN_EXPIRE_HOURS
+          description:
+            en_US: "How long a login token stays valid, in hours"
+        - container: PUID
+          description:
+            en_US: "User ID for file permissions (from PUID)"
+        - container: PGID
+          description:
+            en_US: "Group ID for file permissions (from PGID)"
+        - container: TZ
+          description:
+            en_US: "Container Variable: TZ"
+      volumes:
+        - container: /music
+          description:
+            en_US: "Music library to edit (read/write)"
+        - container: /logs
+          description:
+            en_US: "Application logs"
+        - container: /app/addons
+          description:
+            en_US: "Metadata fetcher addons"
+      ports:
+        - container: "5000"
+          description:
+            en_US: "Web interface"
+
+x-casaos:
+  id: com.dieppon.metadata-docker
+  main: metadata-docker
+  index: /
+  scheme: http
+  port_map: "8889"
+  icon: https://raw.githubusercontent.com/Jonny-Ponny/metadata-docker/main/frontend/src/assets/icon.png
+  title:
+    en_US: Metadata Docker
+  tagline:
+    en_US: Edit FLAC/MP3 metadata, cover art and lyrics for your music library from the browser.
+  description:
+    en_US: >-
+      A self-hosted web application for editing audio file metadata (FLAC/MP3)
+      and managing a music library. It includes a file browser, a built-in audio
+      player, cover art handling, a synchronized lyrics (LRC) editor, smart
+      renaming from metadata schemes, batch operations with optional recursion
+      into subfolders, and pluggable metadata fetchers (addons) for services
+      like MusicBrainz, VocaDB, LrcLib and Genius. Handy alongside Navidrome or
+      any tagged music collection.
+  tips:
+    before_install:
+      en_US: >-
+        Change AUTH_USERNAME/AUTH_PASSWORD before exposing the app. Your library
+        is mounted at /music (read/write — edits are written back to the files),
+        while logs and addons live in /DATA/AppData/metadata-docker/. The web UI
+        listens on port 8889 (port 8888 is taken by the Gluetun VPN app). Make
+        sure PUID/PGID match the owner of your music files.
+  author: dieppon
+  developer: JonnyPonny
+  category: Media
+  architectures:
+    - amd64
+    - arm64
+  version: "1.0.4"
+  update_at: "2026-10-17"
+  website: https://github.com/Jonny-Ponny/metadata-docker
+  repo: https://github.com/Jonny-Ponny/metadata-docker
+  docs: https://github.com/Jonny-Ponny/metadata-docker#readme
