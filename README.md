@@ -29,6 +29,7 @@ zimaos-app-store/
 │   └── docker-compose.yml       # annotated skeleton for new apps
 ├── store-config.json            # store identity (v2)
 ├── supported-languages.json     # locales to generate output for
+├── LICENSE                      # MIT
 └── README.md
 ```
 
@@ -107,6 +108,10 @@ Output lands in `dist/`.
 
 When you bump an app's image tag, also bump `x-casaos.version` and
 `update_at` in the same file.
+
+## License
+
+[MIT](LICENSE) © 2026 Victor Dieppa Garriga
 
 ## Credits
 
