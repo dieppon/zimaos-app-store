@@ -51,7 +51,7 @@ x-casaos:
   # Kept as-is from the official ZimaOS store listing (SVG)
   icon: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@gh-pages/apps/org.icewhale.qbittorrent/assets/icon.svg
   title:
-    en_US: qBittorrent (VPN)
+    en_US: qBittorrent
   tagline:
     en_US: Feature-rich BitTorrent client — traffic routed through your Gluetun VPN tunnel.
   description:
