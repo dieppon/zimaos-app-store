@@ -4,10 +4,10 @@
 # Usage:
 #   ./scripts/build_dist.sh [base-url]
 #
-#   base-url  Public HTTPS URL where dist/ will eventually be hosted
-#             (e.g. https://cdn.jsdelivr.net/gh/you/zimaos-app-store@gh-pages).
-#             Defaults to a placeholder; asset links inside dist/ will use it,
-#             so set the real URL before publishing.
+#   base-url  Public HTTPS URL where dist/ is hosted. Defaults to the
+#             production GitHub Pages URL; override it for a test build
+#             (e.g. ./scripts/build_dist.sh http://localhost:8080).
+#             Asset links inside dist/ are built from this URL.
 #
 # Requirements:
 #   - python3 (3.11+ recommended; 3.9 may work)
@@ -20,7 +20,7 @@ set -euo pipefail
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 TOOLS="$ROOT/.cache/build-tools"
 OUT="$ROOT/dist"
-BASE_URL="${1:-${BASE_URL:-https://example.com/dieppon-app-store}}"
+BASE_URL="${1:-${BASE_URL:-https://dieppa.co.uk/zimaos-app-store}}"
 
 ACTION_REPO_RAW="https://raw.githubusercontent.com/IceWhaleTech/build-appstore-action/main"
 

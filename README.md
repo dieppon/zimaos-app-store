@@ -13,6 +13,8 @@ A personal, curated app store for **ZimaOS** and **CasaOS**, maintained by
 
 ```text
 zimaos-app-store/
+├── .github/workflows/
+│   └── build-store.yml          # CI: builds dist/ and publishes to GitHub Pages
 ├── Apps/                        # one folder per app (the store's content)
 │   ├── gluetun/
 │   │   └── docker-compose.yml   # runtime config + x-casaos metadata
@@ -77,20 +79,50 @@ need `rsvg-convert` (`brew install librsvg` on macOS).
 
 Output lands in `dist/`.
 
-## Putting it on your ZimaOS
+## Publishing
 
-> Not set up yet — this repo is local-only for now. When you're ready:
->
-> 1. Push this repo to GitHub.
-> 2. Publish `dist/` to any HTTPS static host (GitHub Pages is easiest; the CI
->    workflow from `IceWhaleTech/build-appstore-action` can build and deploy it).
->    Use that final URL as the build `base-url` so asset links are correct.
-> 3. In ZimaOS/CasaOS: **App Store → Add Source** and paste the store URL.
->
-> For very old CasaOS/ZimaOS clients that only understand the legacy zip (v1)
-> format, zipping the repo (`Apps/` + `store-config.json` + …) also works — the
-> current source layout is compatible with both, since v1 reads the compose
-> files directly and v2 reads the built `dist/`.
+Everything is automated by `.github/workflows/build-store.yml`. On every push
+to `master` (or a manual run) it:
+
+1. builds the v2 store output from `Apps/*/docker-compose.yml` using IceWhale's
+   official [`build-appstore-action`](https://github.com/IceWhaleTech/build-appstore-action),
+   with `base-url` set to `https://dieppa.co.uk/zimaos-app-store`;
+2. also produces a legacy v1 zip at `dist/store/main.zip` for older clients;
+3. publishes the result to the `gh-pages` branch via GitHub Pages.
+
+The store is then reachable at:
+
+```text
+https://dieppa.co.uk/zimaos-app-store
+```
+
+### One-time GitHub setup
+
+- **Settings → Pages → Build and deployment → Source:** *Deploy from a branch*,
+  branch **gh-pages**, folder **/ (root)**.
+- **Custom domain:** `dieppa.co.uk/zimaos-app-store` is a sub-path, so the site
+  must actually be served under that path (custom domain configured on the
+  Pages/user site, or a proxy that maps that path to the Pages content). The
+  first workflow run creates the `gh-pages` branch.
+- Optional: add `DOCKERHUB_USERNAME` / `DOCKERHUB_TOKEN` repo secrets to avoid
+  Docker Hub rate limits during image metadata lookups (the build works without
+  them).
+
+### Adding the store to ZimaOS / CasaOS
+
+**App Store → Add Source** and paste the store URL:
+
+```text
+https://dieppa.co.uk/zimaos-app-store
+```
+
+For very old CasaOS/ZimaOS clients that only understand the legacy zip format,
+use the hosted zip instead:
+
+```text
+https://dieppa.co.uk/zimaos-app-store/store/main.zip
+```
+
 
 ## Included apps
 

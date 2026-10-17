@@ -5,5 +5,6 @@
   "description": {
     "en_US": "A personal, curated collection of Docker apps for ZimaOS and CasaOS, maintained by dieppon."
   },
-  "maintainer": "dieppon"
+  "maintainer": "dieppon",
+  "url": "https://github.com/dieppon/zimaos-app-store"
 }

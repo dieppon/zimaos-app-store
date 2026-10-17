@@ -1,0 +1,81 @@
+name: Build and publish app store
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-store
+  cancel-in-progress: true
+
+env:
+  # Public URL where dist/ is served — must match where GitHub Pages
+  # publishes this repo. Asset links inside the build use this prefix.
+  STORE_BASE_URL: https://dieppa.co.uk/zimaos-app-store
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache builder state (image sizes and digests)
+        uses: actions/cache@v4
+        with:
+          path: .cache/build_appstore
+          key: appstore-cache-${{ hashFiles('Apps/**/docker-compose.yml') }}
+          restore-keys: |
+            appstore-cache-
+
+      - name: Build v2 store output
+        uses: IceWhaleTech/build-appstore-action@v1
+        with:
+          source: .
+          output: dist
+          base-url: ${{ env.STORE_BASE_URL }}
+          cache-file: .cache/build_appstore/image-size-cache.json
+          digest-cache-file: .cache/build_appstore/image-digest-cache.json
+          report-json: out/build-report.json
+          report-title: dieppon's App Store Build
+        env:
+          # Optional repo secrets — raise Docker Hub rate limits for
+          # image size/digest lookups. The build works without them.
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build legacy v1 zip for older clients
+        run: |
+          mkdir -p dist/store
+          zip -q -r dist/store/main.zip \
+            Apps store-config.json supported-languages.json README.md LICENSE
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "### dieppon's App Store build"
+            echo
+            echo "- base URL: ${{ env.STORE_BASE_URL }}"
+            if [ -f dist/index.json ]; then
+              echo "- apps published: $(jq -r '.app_count' dist/index.json)"
+            fi
+            if [ -f dist/store/main.zip ]; then
+              echo "- legacy zip: included (\`store/main.zip\`)"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish to GitHub Pages (gh-pages branch)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          force_orphan: true
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com
+          commit_message: "Publish store build from ${{ github.sha }}"
