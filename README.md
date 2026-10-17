@@ -20,9 +20,7 @@ zimaos-app-store/
 │   │   └── docker-compose.yml   # runtime config + x-casaos metadata
 │   ├── slskd-vpn/
 │   │   └── docker-compose.yml
-│   ├── transmission-vpn/
-│   │   └── docker-compose.yml
-│   └── whats-up-docker/
+│   └── transmission-vpn/
 │       └── docker-compose.yml
 ├── scripts/
 │   ├── build_dist.sh            # build v2 store output (dist/) locally
@@ -129,14 +127,12 @@ https://dieppa.co.uk/zimaos-app-store/store/main.zip
 | App | Category | Port | Image |
 | --- | --- | --- | --- |
 | Gluetun VPN | Networking | — (headless; publishes 8888/8388/9091/51413/5030/5031/50300) | `qmcgaw/gluetun:v3.41.3` |
-| What's Up Docker | Developer | 3000 | `getwud/wud:9.4.1` |
 | Transmission | Media | 9091 (via Gluetun) | `linuxserver/transmission:4.1.3` |
 | slskd | Media | 5030 (via Gluetun) | `slskd/slskd:0.26.1` |
 
 > **VPN stack install order:** Gluetun VPN → Transmission / slskd. The latter two
 > use `network_mode: container:gluetun`, so Gluetun must be installed and
-> configured (WireGuard credentials) first. Transmission and slskd are labelled
-> `wud.watch=true` so What's Up Docker picks them up.
+> configured (WireGuard credentials) first.
 
 When you bump an app's image tag, also bump `x-casaos.version` and
 `update_at` in the same file.

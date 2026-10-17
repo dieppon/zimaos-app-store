@@ -8,9 +8,6 @@ services:
     # All traffic goes through the Gluetun VPN container — install and
     # configure "Gluetun VPN" from this store first.
     network_mode: "container:gluetun"
-    # Shows this container in the What's Up Docker dashboard
-    labels:
-      - "wud.watch=true"
     environment:
       - SLSKD_REMOTE_CONFIGURATION=true
       - SLSKD_DOWNLOADS_DIR=/downloads
@@ -74,7 +71,7 @@ x-casaos:
       slskd is a modern, self-hosted Soulseek client with a web UI, built for
       always-on sharing. This package routes all of its network traffic through
       the Gluetun VPN container, shares your music library read-only, and
-      downloads to your Soulseek folder. It is also labelled for What's Up Docker.
+      downloads to your Soulseek folder.
   tips:
     before_install:
       en_US: >-
