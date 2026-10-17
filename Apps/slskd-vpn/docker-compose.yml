@@ -1,0 +1,95 @@
+name: slskd-vpn
+
+services:
+  slskd:
+    image: slskd/slskd:0.26.1@sha256:85fc466efe1ec2a5fcabbf6aff9775d4030aeccf92e180f853928f7d3fd20e28
+    container_name: slskd
+    user: "1000:1000"
+    # All traffic goes through the Gluetun VPN container — install and
+    # configure "Gluetun VPN" from this store first.
+    network_mode: "container:gluetun"
+    # Shows this container in the What's Up Docker dashboard
+    labels:
+      - "wud.watch=true"
+    environment:
+      - SLSKD_REMOTE_CONFIGURATION=true
+      - SLSKD_DOWNLOADS_DIR=/downloads
+      - SLSKD_USERNAME=admin
+      - SLSKD_PASSWORD=change-me-asap
+      - SLSKD_API_KEY=CHANGE-ME-generate-your-own-key
+      - TZ=$TZ
+    volumes:
+      - type: bind
+        source: /DATA/AppData/slskd/app
+        target: /app
+      - type: bind
+        source: /media/Main-Storage/Downloads/Soulseek
+        target: /downloads
+      - type: bind
+        source: /media/Main-Storage/Music
+        target: /music
+        read_only: true
+    restart: unless-stopped
+    x-casaos:
+      envs:
+        - container: SLSKD_USERNAME
+          description:
+            en_US: "Web UI username (change it)"
+        - container: SLSKD_PASSWORD
+          description:
+            en_US: "Web UI password (change it!)"
+        - container: SLSKD_API_KEY
+          description:
+            en_US: "API key (generate your own random key)"
+        - container: SLSKD_REMOTE_CONFIGURATION
+          description:
+            en_US: "Configure the app from the web UI instead of config files"
+        - container: TZ
+          description:
+            en_US: "Container Variable: TZ"
+      volumes:
+        - container: /app
+          description:
+            en_US: "slskd application data and configuration"
+        - container: /downloads
+          description:
+            en_US: "Where downloads are saved"
+        - container: /music
+          description:
+            en_US: "Music library shared with the network (read-only)"
+
+x-casaos:
+  id: com.dieppon.slskd-vpn
+  main: slskd
+  index: /
+  scheme: http
+  port_map: "5030"
+  icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/slskd.png
+  title:
+    en_US: slskd
+  tagline:
+    en_US: Soulseek client for sharing and downloading music — routed through your VPN tunnel.
+  description:
+    en_US: >-
+      slskd is a modern, self-hosted Soulseek client with a web UI, built for
+      always-on sharing. This package routes all of its network traffic through
+      the Gluetun VPN container, shares your music library read-only, and
+      downloads to your Soulseek folder. It is also labelled for What's Up Docker.
+  tips:
+    before_install:
+      en_US: >-
+        Requires the "Gluetun VPN" app from this store to be installed and
+        configured first. Change the admin password and API key in the
+        environment variables before or right after installing. The web UI is
+        reachable on port 5030, which Gluetun publishes.
+  author: dieppon
+  developer: slskd
+  category: Media
+  architectures:
+    - amd64
+    - arm64
+  version: "0.26.1"
+  update_at: "2026-10-17"
+  website: https://slskd.org
+  repo: https://github.com/slskd/slskd
+  docs: https://github.com/slskd/slskd#readme

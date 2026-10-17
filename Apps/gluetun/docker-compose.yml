@@ -1,0 +1,147 @@
+name: gluetun
+
+services:
+  gluetun:
+    image: qmcgaw/gluetun:v3.41.3@sha256:fa19cc76b2af13d57a8d3dc3066f2ada061b1c761b8aecf989b3877c0486e027
+    container_name: gluetun
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    volumes:
+      - type: bind
+        source: /DATA/AppData/gluetun/data
+        target: /gluetun
+    environment:
+      - VPN_SERVICE_PROVIDER=custom
+      - VPN_TYPE=wireguard
+      - WIREGUARD_IMPLEMENTATION=userspace
+      - DNS_UPSTREAM_RESOLVER_TYPE=plain
+      - TZ=$TZ
+      - WIREGUARD_PRIVATE_KEY=<your_WIREGUARD_PRIVATE_KEY>
+      - WIREGUARD_ADDRESSES=<your_WIREGUARD_ADDRESSES>
+      - WIREGUARD_PUBLIC_KEY=<your_WIREGUARD_PUBLIC_KEY>
+      - WIREGUARD_ENDPOINT_IP=<your_WIREGUARD_ENDPOINT_IP>
+      - WIREGUARD_ENDPOINT_PORT=<your_WIREGUARD_ENDPOINT_PORT>
+    ports:
+      - target: "8888"
+        published: "8888"
+        protocol: tcp
+      - target: "8388"
+        published: "8388"
+        protocol: tcp
+      - target: "8388"
+        published: "8388"
+        protocol: udp
+      # Opened for Transmission:
+      - target: "9091"
+        published: "9091"
+        protocol: tcp
+      - target: "51413"
+        published: "51413"
+        protocol: tcp
+      - target: "51413"
+        published: "51413"
+        protocol: udp
+      # Opened for slskd:
+      - target: "5030"
+        published: "5030"
+        protocol: tcp
+      - target: "5031"
+        published: "5031"
+        protocol: tcp
+      - target: "50300"
+        published: "50300"
+        protocol: tcp
+    restart: unless-stopped
+    x-casaos:
+      envs:
+        - container: VPN_SERVICE_PROVIDER
+          description:
+            en_US: "VPN provider — keep 'custom' for WireGuard"
+        - container: VPN_TYPE
+          description:
+            en_US: "VPN type — keep 'wireguard'"
+        - container: WIREGUARD_PRIVATE_KEY
+          description:
+            en_US: "Your WireGuard private key (from your VPN provider)"
+        - container: WIREGUARD_ADDRESSES
+          description:
+            en_US: "Your WireGuard client address(es), e.g. 10.64.222.21/32"
+        - container: WIREGUARD_PUBLIC_KEY
+          description:
+            en_US: "Your WireGuard public key (from your VPN provider)"
+        - container: WIREGUARD_ENDPOINT_IP
+          description:
+            en_US: "VPN server IP address"
+        - container: WIREGUARD_ENDPOINT_PORT
+          description:
+            en_US: "VPN server port (usually 51820)"
+        - container: TZ
+          description:
+            en_US: "Container Variable: TZ"
+      volumes:
+        - container: /gluetun
+          description:
+            en_US: "VPN configuration and runtime data"
+      ports:
+        - container: "8888"
+          description:
+            en_US: "HTTP proxy through the VPN tunnel"
+        - container: "8388"
+          description:
+            en_US: "SOCKS5 proxy through the VPN tunnel"
+        - container: "9091"
+          description:
+            en_US: "Transmission web UI (when Transmission is chained)"
+        - container: "51413"
+          description:
+            en_US: "Torrent traffic (when Transmission is chained)"
+        - container: "5030"
+          description:
+            en_US: "slskd web UI (when slskd is chained)"
+        - container: "5031"
+          description:
+            en_US: "slskd secondary web port (when slskd is chained)"
+        - container: "50300"
+          description:
+            en_US: "slskd Soulseek listen port (when slskd is chained)"
+
+x-casaos:
+  id: com.dieppon.gluetun-vpn
+  main: gluetun
+  index: /
+  scheme: http
+  port_map: ""
+  icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/gluetun.png
+  title:
+    en_US: Gluetun VPN
+  tagline:
+    en_US: VPN client container with a killswitch — route other apps' traffic through the tunnel.
+  description:
+    en_US: >-
+      Gluetun is a lightweight Swiss-knife VPN client container. It creates a VPN
+      tunnel (WireGuard or OpenVPN) with a built-in killswitch, HTTP and SOCKS5
+      proxies, and lets other containers share its network connection so all their
+      traffic goes through the VPN. This package is preconfigured for a custom
+      WireGuard provider and opens the ports needed by the Transmission and slskd
+      packages in this store.
+  tips:
+    before_install:
+      en_US: >-
+        You need WireGuard credentials from your VPN provider (private key, public
+        key, addresses, and server endpoint) — fill them in during install. Install
+        and configure this app before installing the Transmission or slskd packages
+        from this store, which route their traffic through it.
+  author: dieppon
+  developer: Quentin McGaw
+  category: Networking
+  architectures:
+    - amd64
+    - arm64
+  version: "3.41.3"
+  update_at: "2026-10-17"
+  website: https://qdm12.github.io/gluetun/
+  repo: https://github.com/qdm12/gluetun
+  docs: https://github.com/qdm12/gluetun-wiki

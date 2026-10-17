@@ -1,0 +1,93 @@
+name: transmission-vpn
+
+services:
+  transmission:
+    image: linuxserver/transmission:4.1.3@sha256:4e429c4fb4227af3dbc16afcaaa2ec58a43e8c4a257bac30899873a6a05a1873
+    container_name: transmission
+    # All traffic goes through the Gluetun VPN container — install and
+    # configure "Gluetun VPN" from this store first.
+    network_mode: "container:gluetun"
+    # Shows this container in the What's Up Docker dashboard
+    labels:
+      - "wud.watch=true"
+    environment:
+      - PEERPORT=51413
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+      - TR_AUTH_REQUIRED=false
+    volumes:
+      - type: bind
+        source: /DATA/AppData/transmission/config
+        target: /config
+      - type: bind
+        source: /media/Main-Storage/Downloads/transmission
+        target: /downloads
+      - type: bind
+        source: /media/Main-Storage/Downloads/transmission/watch
+        target: /watch
+    restart: unless-stopped
+    x-casaos:
+      envs:
+        - container: TR_AUTH_REQUIRED
+          description:
+            en_US: "Require username/password to add torrents"
+        - container: PEERPORT
+          description:
+            en_US: "Incoming peer port (must match the 51413 port opened on Gluetun)"
+        - container: PUID
+          description:
+            en_US: "Container Variable: PUID"
+        - container: PGID
+          description:
+            en_US: "Container Variable: PGID"
+        - container: TZ
+          description:
+            en_US: "Container Variable: TZ"
+      volumes:
+        - container: /config
+          description:
+            en_US: "Transmission configuration and session data"
+        - container: /downloads
+          description:
+            en_US: "Where finished and in-progress torrents are saved"
+        - container: /watch
+          description:
+            en_US: "Drop .torrent files here to start them"
+
+x-casaos:
+  id: com.dieppon.transmission-vpn
+  main: transmission
+  index: /
+  scheme: http
+  port_map: "9091"
+  icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/transmission.png
+  title:
+    en_US: Transmission
+  tagline:
+    en_US: Fast, lightweight BitTorrent client — traffic routed through your Gluetun VPN tunnel.
+  description:
+    en_US: >-
+      Transmission is a simple, lightweight BitTorrent client with a web UI. This
+      package routes all of its network traffic through the Gluetun VPN container
+      (network mode: container:gluetun) so your torrents go through your VPN, and
+      it relies on the torrent ports opened on Gluetun. It is also labelled for
+      What's Up Docker so it shows up in your WUD dashboard.
+  tips:
+    before_install:
+      en_US: >-
+        Requires the "Gluetun VPN" app from this store to be installed and
+        configured first — this app's traffic depends on it. Downloads are saved
+        to /media/Main-Storage/Downloads/transmission. The web UI is reachable on
+        port 9091, which Gluetun publishes.
+  author: dieppon
+  developer: Transmission Project
+  category: Media
+  architectures:
+    - amd64
+    - arm64
+  version: "4.1.3"
+  update_at: "2026-10-17"
+  website: https://transmissionbt.com
+  repo: https://github.com/transmission/transmission
+  docs: https://transmissionbt.com/help/

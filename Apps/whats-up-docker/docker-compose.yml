@@ -1,0 +1,73 @@
+name: whats-up-docker
+
+services:
+  wud:
+    image: getwud/wud:9.4.1
+    container_name: wud
+    restart: unless-stopped
+    ports:
+      - target: "3000"
+        published: "3000"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+    environment:
+      - TZ=$TZ
+      # Prevents WUD from flooding the dashboard with ZimaOS core containers
+      - WUD_WATCHER_LOCAL_WATCHBYDEFAULT=false
+    x-casaos:
+      envs:
+        - container: WUD_WATCHER_LOCAL_WATCHBYDEFAULT
+          description:
+            en_US: "Watch only explicitly labelled containers (keeps ZimaOS core out of the dashboard)"
+        - container: TZ
+          description:
+            en_US: "Container Variable: TZ"
+      volumes:
+        - container: /var/run/docker.sock
+          description:
+            en_US: "Docker socket (read-only) to inspect your containers"
+      ports:
+        - container: "3000"
+          description:
+            en_US: "Web UI port"
+
+x-casaos:
+  id: com.dieppon.whats-up-docker
+  main: wud
+  index: /
+  scheme: http
+  port_map: "3000"
+  icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/wud.png
+  title:
+    en_US: What's Up Docker
+  tagline:
+    en_US: Get notified when new versions of your Docker containers are available.
+  description:
+    en_US: >-
+      What's Up Docker watches your running containers and tells you when a new
+      image version is available — with a clean web dashboard, update overviews,
+      and notifications to services like Slack, Discord, Telegram, ntfy, and
+      email. ZimaOS core containers are excluded by default so only your own apps
+      are watched.
+  tips:
+    before_install:
+      en_US: >-
+        This app mounts the Docker socket read-only to inspect your containers.
+        ZimaOS system containers are excluded via
+        WUD_WATCHER_LOCAL_WATCHBYDEFAULT=false. Add the label wud.watch=true to
+        any container you want explicitly watched.
+  author: dieppon
+  developer: fmartinou
+  category: Developer
+  architectures:
+    - amd64
+    - arm64
+  version: "9.4.1"
+  update_at: "2026-10-17"
+  website: https://getwud.github.io/wud/
+  repo: https://github.com/getwud/wud
+  docs: https://getwud.github.io/wud/

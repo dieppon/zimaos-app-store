@@ -1,0 +1,8 @@
+# Build output
+dist/
+
+# Local build tooling and caches
+.cache/
+
+# OS noise
+.DS_Store

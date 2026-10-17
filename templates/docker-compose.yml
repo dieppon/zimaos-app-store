@@ -1,0 +1,79 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# App template for dieppon's App Store
+#
+# Copy this file to Apps/<app-folder>/docker-compose.yml and fill in the
+# placeholders. Rules that matter (from the official ZimaOS store docs):
+#
+#   • top-level `name`          required, lowercase project name
+#   • `services`                required
+#   • `x-casaos.id`             required, reverse-domain (com.dieppon.<app>),
+#                               letters/digits/./_/- only — NEVER change later
+#   • `x-casaos.main`           required, must be a service name
+#   • `x-casaos.index`          required in practice, usually "/"
+#   • `x-casaos.port_map`       required, MUST be a quoted string
+#   • `x-casaos.icon`           required, URL to a PNG/SVG icon
+#   • `x-casaos.title`          required, locale-keyed object (not a plain string)
+#   • `x-casaos.category`       required, one of:
+#                               Media, Productivity, Home, Networking, AI,
+#                               Finance, Social, Developer, Others
+#   • `x-casaos.version`        required, semver-style — bump it on every
+#                               meaningful update of the app definition
+#
+# Conventions in this store:
+#   • put persistent data in /DATA/AppData/<app-folder>/...
+#   • use $PUID / $PGID / $TZ (provided by CasaOS/ZimaOS) for user-mapping
+#   • localize every user-facing text under `en_US`
+# ─────────────────────────────────────────────────────────────────────────────
+name: APP_FOLDER
+
+services:
+  app:
+    image: registry/image:tag
+    restart: unless-stopped
+    # environment:
+    #   PUID: $PUID
+    #   PGID: $PGID
+    #   TZ: $TZ
+    ports:
+      - target: "8080"
+        published: "8080"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: /DATA/AppData/APP_FOLDER/config
+        target: /config
+    x-casaos:
+      ports:
+        - container: "8080"
+          description:
+            en_US: "Web UI port"
+      volumes:
+        - container: /config
+          description:
+            en_US: "App configuration and data"
+
+x-casaos:
+  id: com.dieppon.APP_FOLDER
+  main: app
+  index: /
+  scheme: http
+  port_map: "8080"
+  icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/APP_FOLDER.png
+  title:
+    en_US: App Title
+  tagline:
+    en_US: One short sentence shown in the app list.
+  description:
+    en_US: >-
+      A longer description of what the app does and why someone would install it.
+  author: dieppon
+  developer: Upstream Developer Name
+  category: Others
+  architectures:
+    - amd64
+    - arm64
+  version: "1.0.0"
+  update_at: "2026-10-17"
+  website: https://example.com
+  repo: https://github.com/example/app
+  docs: https://example.com/docs
