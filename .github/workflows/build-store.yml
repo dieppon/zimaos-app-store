@@ -69,13 +69,42 @@ jobs:
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Sanity-check the build before publishing
+        run: |
+          set -euo pipefail
+          test -f dist/index.json
+          test -f dist/store.json
+          echo "apps: $(jq -r '.app_count' dist/index.json)"
+          echo "base_url: $(jq -r '.base_url' dist/index.json)"
+
       - name: Publish to GitHub Pages (gh-pages branch)
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          publish_branch: gh-pages
-          force_orphan: true
-          user_name: github-actions[bot]
-          user_email: github-actions[bot]@users.noreply.github.com
-          commit_message: "Publish store build from ${{ github.sha }}"
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          touch dist/.nojekyll
+          cd dist
+          git init -q
+          git checkout -q -b gh-pages
+          git add -A
+          git -c user.name="github-actions[bot]" \
+              -c user.email="github-actions[bot]@users.noreply.github.com" \
+              commit -qm "Publish store build from ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
+
+      - name: Verify gh-pages now serves the store
+        run: |
+          set -euo pipefail
+          git ls-remote --heads origin gh-pages
+          for i in 1 2 3 4 5 6; do
+            if curl -fsS --max-time 20 \
+              "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/gh-pages/store.json" \
+              | jq -e '.store_id == "com.dieppon.appstore"' >/dev/null; then
+              echo "gh-pages is serving the built store"
+              exit 0
+            fi
+            echo "waiting for gh-pages to update ($i/6)..."
+            sleep 10
+          done
+          echo "gh-pages does not expose the built store yet" >&2
+          exit 1
