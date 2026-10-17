@@ -22,6 +22,8 @@ zimaos-app-store/
 │   │   └── docker-compose.yml
 │   ├── musicbrainz-picard/
 │   │   └── docker-compose.yml
+│   ├── qbittorrent-vpn/
+│   │   └── docker-compose.yml
 │   ├── slskd-vpn/
 │   │   └── docker-compose.yml
 │   └── transmission-vpn/
@@ -140,15 +142,16 @@ https://dieppa.co.uk/zimaos-app-store/store/main.zip
 
 | App | Category | Port | Image |
 | --- | --- | --- | --- |
-| Gluetun VPN | Networking | 8000 (status API; also publishes 8888/8388/9091/51413/5030/5031/50300) | `qmcgaw/gluetun:v3.41.3` |
+| Gluetun VPN | Networking | 8000 (status API; also publishes 8181/6881/8888/8388/9091/51413/5030/5031/50300) | `qmcgaw/gluetun:v3.41.3` |
 | Metadata Docker | Media | 5825 | `ghcr.io/jonny-ponny/metadata-docker:1.0.4` |
 | MusicBrainz Picard | Media | 5800 | `jlesage/musicbrainz-picard:v26.10.2` |
+| qBittorrent | Media | 8181 (via Gluetun) | `ghcr.io/hotio/qbittorrent:release-5.2.4` |
 | Transmission | Media | 9091 (via Gluetun) | `linuxserver/transmission:4.1.3` |
 | slskd | Media | 5030 (via Gluetun) | `slskd/slskd:0.26.1` |
 
-> **VPN stack install order:** Gluetun VPN → Transmission / slskd. The latter two
-> use `network_mode: container:gluetun`, so Gluetun must be installed and
-> configured (WireGuard credentials) first.
+> **VPN stack install order:** Gluetun VPN → Transmission / qBittorrent / slskd.
+> The latter three use `network_mode: container:gluetun`, so Gluetun must be
+> installed and configured (WireGuard credentials) first.
 
 When you bump an app's image tag, also bump `x-casaos.version` and
 `update_at` in the same file.
