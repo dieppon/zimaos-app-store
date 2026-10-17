@@ -63,8 +63,9 @@ description, icon, and links. The rules that matter (also documented in
 | User mapping | Use `PUID: $PUID`, `PGID: $PGID`, `TZ: $TZ` — these are provided by CasaOS/ZimaOS. |
 
 Icons: a PNG works best. Each app keeps its own icon next to its compose file
-(`Apps/<folder>/icon.png`) — **512×512 PNG, white background, ~10 % padding on
-every side** (iOS-style) — and the compose points at it with an absolute URL:
+(`Apps/<folder>/icon.png`) — **512×512 PNG, white background, artwork scaled so
+its longest side is 60 % of the canvas (~20 % padding on every side)** — and the
+compose points at it with an absolute URL:
 
 ```yaml
 icon: https://raw.githubusercontent.com/dieppon/zimaos-app-store/master/Apps/<folder>/icon.png
