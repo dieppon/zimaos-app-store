@@ -1,0 +1,86 @@
+name: musicbrainz-picard
+
+services:
+  musicbrainz-picard:
+    image: jlesage/musicbrainz-picard:v26.10.2@sha256:8156be84eb7d6835f7f9e324ed2e408b0e430505f9c7c7ce62dd658569c55a4a
+    container_name: musicbrainz-picard
+    environment:
+      - USER_ID=$PUID
+      - GROUP_ID=$PGID
+      - TZ=$TZ
+    volumes:
+      # Picard's own settings, logs and certificates
+      - type: bind
+        source: /DATA/AppData/musicbrainz-picard/config
+        target: /config
+      # Music library to tag — read/write so saved tags are written back
+      - type: bind
+        source: /media/Main-Storage/Media/Music
+        target: /music
+    ports:
+      - target: "5800"
+        published: "5800"
+        protocol: tcp
+    restart: unless-stopped
+    x-casaos:
+      envs:
+        - container: USER_ID
+          description:
+            en_US: "User ID the app runs as (from PUID)"
+        - container: GROUP_ID
+          description:
+            en_US: "Group ID the app runs as (from PGID)"
+        - container: TZ
+          description:
+            en_US: "Container Variable: TZ"
+      volumes:
+        - container: /config
+          description:
+            en_US: "Picard settings, logs and certificates"
+        - container: /music
+          description:
+            en_US: "Music library to tag (read/write, so Picard can save tags)"
+      ports:
+        - container: "5800"
+          description:
+            en_US: "Picard desktop GUI in the browser"
+
+x-casaos:
+  id: com.dieppon.musicbrainz-picard
+  main: musicbrainz-picard
+  index: /
+  scheme: http
+  port_map: "5800"
+  icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/musicbrainz-picard.png
+  title:
+    en_US: MusicBrainz Picard
+  tagline:
+    en_US: Music tagger — identify your files and write correct tags and cover art automatically.
+  description:
+    en_US: >-
+      MusicBrainz Picard is a cross-platform music tagger that identifies your
+      audio files through the MusicBrainz database and writes accurate tags,
+      album art and MusicBrainz IDs back to them. Fingerprinting lets it identify
+      even badly tagged or untagged files. This package uses the unofficial
+      jlesage container, which serves Picard's full desktop GUI in a web browser
+      (port 5800) — no client software needed, with clipboard sharing, an
+      integrated file manager and terminal. Your music library is mounted at
+      /music inside the container.
+  tips:
+    before_install:
+      en_US: >-
+        Opens a full desktop Picard window in your browser on port 5800 — use a
+        modern browser, and expect a one-time self-signed certificate warning if
+        you switch to HTTPS. Your library is mounted at /music (read/write so
+        tags are saved); settings live in /DATA/AppData/musicbrainz-picard/config.
+  author: dieppon
+  developer: MetaBrainz Foundation
+  category: Media
+  architectures:
+    - amd64
+    - arm64
+  version: "26.10.2"
+  update_at: "2026-10-17"
+  website: https://picard.musicbrainz.org
+  repo: https://github.com/jlesage/docker-musicbrainz-picard
+  docs: https://github.com/jlesage/docker-musicbrainz-picard#readme
