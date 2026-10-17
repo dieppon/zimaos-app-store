@@ -26,9 +26,8 @@ services:
         source: /DATA/AppData/metadata-docker/addons
         target: /app/addons
     ports:
-      # Host 8889 because 8888 is already used by the Gluetun VPN app
       - target: "5000"
-        published: "8889"
+        published: "5825"
         protocol: tcp
     restart: unless-stopped
     x-casaos:
@@ -71,7 +70,7 @@ x-casaos:
   main: metadata-docker
   index: /
   scheme: http
-  port_map: "8889"
+  port_map: "5825"
   icon: https://raw.githubusercontent.com/Jonny-Ponny/metadata-docker/main/frontend/src/assets/icon.png
   title:
     en_US: Metadata Docker
@@ -92,8 +91,8 @@ x-casaos:
         Change AUTH_USERNAME/AUTH_PASSWORD before exposing the app. Your library
         is mounted at /music (read/write — edits are written back to the files),
         while logs and addons live in /DATA/AppData/metadata-docker/. The web UI
-        listens on port 8889 (port 8888 is taken by the Gluetun VPN app). Make
-        sure PUID/PGID match the owner of your music files.
+        listens on port 5825. Make sure PUID/PGID match the owner of your music
+        files.
   author: dieppon
   developer: JonnyPonny
   category: Media
