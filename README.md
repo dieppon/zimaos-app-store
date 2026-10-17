@@ -130,7 +130,7 @@ https://dieppa.co.uk/zimaos-app-store/store/main.zip
 
 | App | Category | Port | Image |
 | --- | --- | --- | --- |
-| Gluetun VPN | Networking | — (headless; publishes 8888/8388/9091/51413/5030/5031/50300) | `qmcgaw/gluetun:v3.41.3` |
+| Gluetun VPN | Networking | 8000 (status API; also publishes 8888/8388/9091/51413/5030/5031/50300) | `qmcgaw/gluetun:v3.41.3` |
 | Metadata Docker | Media | 5825 | `ghcr.io/jonny-ponny/metadata-docker:1.0.4` |
 | MusicBrainz Picard | Media | 5800 | `jlesage/musicbrainz-picard:v26.10.2` |
 | Transmission | Media | 9091 (via Gluetun) | `linuxserver/transmission:4.1.3` |

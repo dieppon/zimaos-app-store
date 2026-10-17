@@ -18,6 +18,8 @@ services:
       - VPN_TYPE=wireguard
       - WIREGUARD_IMPLEMENTATION=userspace
       - DNS_UPSTREAM_RESOLVER_TYPE=plain
+      # Control API access — HTTP basic auth (change the password!)
+      - 'HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE={"auth":"basic","username":"admin","password":"change-me-asap"}'
       - TZ=$TZ
       - WIREGUARD_PRIVATE_KEY=<your_WIREGUARD_PRIVATE_KEY>
       - WIREGUARD_ADDRESSES=<your_WIREGUARD_ADDRESSES>
@@ -34,6 +36,10 @@ services:
       - target: "8388"
         published: "8388"
         protocol: udp
+      # Control API — VPN status and public IP (this is the app's dashboard entry)
+      - target: "8000"
+        published: "8000"
+        protocol: tcp
       # Opened for Transmission:
       - target: "9091"
         published: "9091"
@@ -92,6 +98,9 @@ services:
         - container: "8388"
           description:
             en_US: "SOCKS5 proxy through the VPN tunnel"
+        - container: "8000"
+          description:
+            en_US: "Control API — VPN status and public IP (open this from the dashboard)"
         - container: "9091"
           description:
             en_US: "Transmission web UI (when Transmission is chained)"
@@ -111,9 +120,10 @@ services:
 x-casaos:
   id: com.dieppon.gluetun-vpn
   main: gluetun
-  index: /
+  # The dashboard "open" action loads this control-API endpoint
+  index: /v1/publicip/ip
   scheme: http
-  port_map: ""
+  port_map: "8000"
   icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/gluetun.png
   title:
     en_US: Gluetun VPN
@@ -126,14 +136,19 @@ x-casaos:
       proxies, and lets other containers share its network connection so all their
       traffic goes through the VPN. This package is preconfigured for a custom
       WireGuard provider and opens the ports needed by the Transmission and slskd
-      packages in this store.
+      packages in this store. Its built-in control API on port 8000 reports the
+      VPN status and the current public IP.
   tips:
     before_install:
       en_US: >-
         You need WireGuard credentials from your VPN provider (private key, public
         key, addresses, and server endpoint) — fill them in during install. Install
         and configure this app before installing the Transmission or slskd packages
-        from this store, which route their traffic through it.
+        from this store, which route their traffic through it. Opening this app
+        loads the VPN's public IP as JSON from the control API (port 8000, login
+        admin / change-me-asap — change it after install). Port 8888 is the HTTP
+        proxy, not a web page: test it with
+        curl -x http://<server>:8888 https://api.ipify.org.
   author: dieppon
   developer: Quentin McGaw
   category: Networking
