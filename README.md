@@ -58,7 +58,7 @@ description, icon, and links. The rules that matter (also documented in
 | `x-casaos.port_map` | The web UI port — must be a **quoted string** (`"8080"`). |
 | `x-casaos.title` | Locale-keyed object: `title: { en_US: My App }`, not a plain string. |
 | `x-casaos.category` | One of: `Media`, `Productivity`, `Home`, `Networking`, `AI`, `Finance`, `Social`, `Developer`, `Others`. |
-| `x-casaos.version` | Semver-style string. **Bump it every time you publish a meaningful change** — clients use it to decide whether users get an update. |
+| `x-casaos.version` | Semver-style string, **kept equal to the version of the container image** (e.g. `3.41.3`). When you change the app without a new container release, append a store-revision suffix — `3.41.3+1`, then `3.41.3+2`, and so on. Clients use it to decide whether users get an update. |
 | Data paths | Put persistent data in `/DATA/AppData/<app-folder>/...` (the standard CasaOS/ZimaOS data location). |
 | User mapping | Use `PUID: $PUID`, `PGID: $PGID`, `TZ: $TZ` — these are provided by CasaOS/ZimaOS. |
 
@@ -143,7 +143,7 @@ https://dieppa.co.uk/zimaos-app-store/store/main.zip
 
 | App | Category | Port | Image |
 | --- | --- | --- | --- |
-| Gluetun VPN | Networking | 8000 (status API; also publishes 8181/6881/8888/8388/9091/51413/5030/5031/50300) | `qmcgaw/gluetun:v3.41.3` |
+| Gluetun VPN | Networking | 8000 (status API, no login by default; also publishes 8181/6881/8888/8388/9091/51413/5030/5031/50300) | `qmcgaw/gluetun:v3.41.3` |
 | Metadata Docker | Media | 5825 | `ghcr.io/jonny-ponny/metadata-docker:1.0.4` |
 | MusicBrainz Picard | Media | 5800 | `jlesage/musicbrainz-picard:v26.10.2` |
 | qBittorrent | Media | 8181 (via Gluetun) | `ghcr.io/hotio/qbittorrent:release-5.2.4` |
