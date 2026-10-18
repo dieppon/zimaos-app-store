@@ -58,7 +58,7 @@ description, icon, and links. The rules that matter (also documented in
 | `x-casaos.port_map` | The web UI port — must be a **quoted string** (`"8080"`). |
 | `x-casaos.title` | Locale-keyed object: `title: { en_US: My App }`, not a plain string. |
 | `x-casaos.category` | One of: `Media`, `Productivity`, `Home`, `Networking`, `AI`, `Finance`, `Social`, `Developer`, `Others`. |
-| `x-casaos.version` | Semver-style string, **kept equal to the version of the container image** (e.g. `3.41.3`). When you change the app without a new container release, append a store-revision suffix — `3.41.3+1`, then `3.41.3+2`, and so on. Clients use it to decide whether users get an update. |
+| `x-casaos.version` | Semver-style string, **kept equal to the version of the container image** (e.g. `3.41.3`). When you change an app *without* a new container release, bump the **patch position** (`3.41.3` → `3.41.5`) and note in a comment that the image is unchanged. Do **not** rely on a `+1` / `+2` build suffix to ship an update: semver comparisons ignore build metadata, so `3.41.3+2` counts as *equal* to `3.41.3` and is never offered (`3.41.4` had to be published by hand for exactly that reason). The version must always be **strictly higher** than every version already published for that app — never lower it, even when upstream catches up. |
 | Data paths | Put persistent data in `/DATA/AppData/<app-folder>/...` (the standard CasaOS/ZimaOS data location). |
 | User mapping | Use `PUID: $PUID`, `PGID: $PGID`, `TZ: $TZ` — these are provided by CasaOS/ZimaOS. |
 
@@ -145,14 +145,28 @@ https://dieppa.co.uk/zimaos-app-store/store/main.zip
 | --- | --- | --- | --- |
 | Gluetun VPN | Networking | 8000 (status API, no login by default; also publishes 8181/6881/8888/8388/9091/51413/5030/5031/50300) | `qmcgaw/gluetun:v3.41.3` |
 | Metadata Docker | Media | 5825 | `ghcr.io/jonny-ponny/metadata-docker:1.0.4` |
-| MusicBrainz Picard | Media | 5800 | `jlesage/musicbrainz-picard:v26.10.2` |
-| qBittorrent | Media | 8181 (via Gluetun) | `ghcr.io/hotio/qbittorrent:release-5.2.4` |
+| MusicBrainz Picard | Media | 5801 (5800 inside the container) | `jlesage/musicbrainz-picard:v26.10.2` |
+| qBittorrent | Media | 8181 (via Gluetun, same port inside and out) | `ghcr.io/hotio/qbittorrent:release-5.2.4` |
 | Transmission | Media | 9091 (via Gluetun) | `linuxserver/transmission:4.1.3` |
 | slskd | Media | 5030 (via Gluetun) | `slskd/slskd:0.26.1` |
 
 > **VPN stack install order:** Gluetun VPN → Transmission / qBittorrent / slskd.
 > The latter three use `network_mode: container:gluetun`, so Gluetun must be
-> installed and configured (WireGuard credentials) first.
+> installed and configured (WireGuard credentials) first. Whenever Gluetun is
+> recreated (for example by an update), restart those three afterwards: a
+> container that shares another container's network namespace ends up in a dead
+> namespace when that container is replaced.
+>
+> **VPN-chained ports must match inside and out.** Gluetun owns the published
+> ports; the chained app listens on the same number inside the tunnel
+> (`8181` → `8181`), never a remapped one. qBittorrent enforces this: its web UI
+> rejects requests whose Host header port differs from the port it listens on
+> with `Unauthorized`, so it is started with `WEBUI_PORTS=8181/tcp` (hotio
+> forwards that to `qbittorrent-nox --webui-port`).
+
+Picard is published on **5801** rather than its usual 5800 because the official
+ZimaOS store's HandBrake app owns 5800; the container itself still serves the
+GUI on 5800 (jlesage images are made to be remapped).
 
 When you bump an app's image tag, also bump `x-casaos.version` and
 `update_at` in the same file.
