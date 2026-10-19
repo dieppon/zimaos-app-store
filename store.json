@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "store_id": "com.dieppon.appstore",
+  "name": "dieppon's App Store",
+  "description": "A personal, curated collection of Docker apps for ZimaOS and CasaOS, maintained by dieppon.",
+  "maintainer": "dieppon",
+  "url": "https://github.com/dieppon/zimaos-app-store"
+}

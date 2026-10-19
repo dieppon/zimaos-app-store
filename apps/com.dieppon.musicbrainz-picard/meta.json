@@ -1,0 +1,30 @@
+{
+  "tagline": "Music tagger — identify your files and write correct tags and cover art automatically.",
+  "description": "MusicBrainz Picard is a cross-platform music tagger that identifies your audio files through the MusicBrainz database and writes accurate tags, album art and MusicBrainz IDs back to them. Fingerprinting lets it identify even badly tagged or untagged files. This package uses the unofficial jlesage container, which serves Picard's full desktop GUI in a web browser (published on port 5801) — no client software needed, with clipboard sharing, an integrated file manager and terminal. Your music library is mounted at /music inside the container.",
+  "tips": {
+    "before_install": "Opens a full desktop Picard window in your browser on port 5801 (not the usual 5800 — that one belongs to the official HandBrake app) — use a modern browser, and expect a one-time self-signed certificate warning if you switch to HTTPS. Your library is mounted at /music (read/write so tags are saved); settings live in /DATA/AppData/musicbrainz-picard/config."
+  },
+  "author": "dieppon",
+  "developer": "MetaBrainz Foundation",
+  "category": "Media",
+  "architectures": [
+    "amd64",
+    "arm64"
+  ],
+  "update_at": "2026-10-18",
+  "website": "https://picard.musicbrainz.org",
+  "repo": "https://github.com/jlesage/docker-musicbrainz-picard",
+  "docs": "https://github.com/jlesage/docker-musicbrainz-picard#readme",
+  "title": "MusicBrainz Picard",
+  "base_url": "https://dieppa.co.uk/zimaos-app-store",
+  "id": "com.dieppon.musicbrainz-picard",
+  "version": "26.10.2",
+  "categories": [
+    "media"
+  ],
+  "min_memory": 0,
+  "min_image_size": {
+    "amd64": 451632829,
+    "arm64": 432530254
+  }
+}

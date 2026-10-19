@@ -1,0 +1,37 @@
+name: musicbrainz-picard
+
+services:
+  musicbrainz-picard:
+    image: jlesage/musicbrainz-picard:v26.10.2@sha256:8156be84eb7d6835f7f9e324ed2e408b0e430505f9c7c7ce62dd658569c55a4a
+    container_name: musicbrainz-picard
+    environment:
+      - USER_ID=$PUID
+      - GROUP_ID=$PGID
+      - TZ=$TZ
+    volumes:
+      # Picard's own settings, logs and certificates
+      - type: bind
+        source: /DATA/AppData/musicbrainz-picard/config
+        target: /config
+      # Music library to tag — read/write so saved tags are written back
+      - type: bind
+        source: /media/Main-Storage/Media/Music
+        target: /music
+    ports:
+      # Host port 5801, because 5800 is taken by the "HandBrake" app in the
+      # official ZimaOS store. The GUI is still served from 5800 inside the
+      # container — jlesage's images are built to be remapped like this.
+      - target: "5800"
+        published: "5801"
+        protocol: tcp
+    restart: unless-stopped
+x-casaos:
+  id: com.dieppon.musicbrainz-picard
+  main: musicbrainz-picard
+  index: /
+  scheme: http
+  port_map: "5801"
+  icon: https://dieppa.co.uk/zimaos-app-store/apps/com.dieppon.musicbrainz-picard/assets/icon.png
+  title:
+    en_US: MusicBrainz Picard
+  version: "26.10.2"

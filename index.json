@@ -1,0 +1,134 @@
+{
+  "version": 2,
+  "updated_at": "2026-10-19T21:49:04Z",
+  "app_count": 6,
+  "base_url": "https://dieppa.co.uk/zimaos-app-store",
+  "apps": [
+    {
+      "id": "com.dieppon.gluetun-vpn",
+      "title": "Gluetun VPN",
+      "tagline": "VPN client container with a killswitch — route other apps' traffic through the tunnel.",
+      "category": "Networking",
+      "categories": [
+        "networking"
+      ],
+      "author": "dieppon",
+      "developer": "Quentin McGaw",
+      "architectures": [
+        "amd64",
+        "arm64"
+      ],
+      "icon": "/apps/com.dieppon.gluetun-vpn/assets/icon.png",
+      "thumbnail": "",
+      "compose_url": "/apps/com.dieppon.gluetun-vpn/docker-compose.yml",
+      "meta_url": "/apps/com.dieppon.gluetun-vpn/meta.json",
+      "content_hash": "6bc405cf",
+      "version": "3.41.3"
+    },
+    {
+      "id": "com.dieppon.metadata-docker",
+      "title": "Metadata Docker",
+      "tagline": "Edit FLAC/MP3 metadata, cover art and lyrics for your music library from the browser.",
+      "category": "Media",
+      "categories": [
+        "media"
+      ],
+      "author": "dieppon",
+      "developer": "JonnyPonny",
+      "architectures": [
+        "amd64",
+        "arm64"
+      ],
+      "icon": "/apps/com.dieppon.metadata-docker/assets/icon.png",
+      "thumbnail": "",
+      "compose_url": "/apps/com.dieppon.metadata-docker/docker-compose.yml",
+      "meta_url": "/apps/com.dieppon.metadata-docker/meta.json",
+      "content_hash": "58483f6c",
+      "version": "1.0.4"
+    },
+    {
+      "id": "com.dieppon.musicbrainz-picard",
+      "title": "MusicBrainz Picard",
+      "tagline": "Music tagger — identify your files and write correct tags and cover art automatically.",
+      "category": "Media",
+      "categories": [
+        "media"
+      ],
+      "author": "dieppon",
+      "developer": "MetaBrainz Foundation",
+      "architectures": [
+        "amd64",
+        "arm64"
+      ],
+      "icon": "/apps/com.dieppon.musicbrainz-picard/assets/icon.png",
+      "thumbnail": "",
+      "compose_url": "/apps/com.dieppon.musicbrainz-picard/docker-compose.yml",
+      "meta_url": "/apps/com.dieppon.musicbrainz-picard/meta.json",
+      "content_hash": "e0dc578d",
+      "version": "26.10.2"
+    },
+    {
+      "id": "com.dieppon.qbittorrent-vpn",
+      "title": "qBittorrent",
+      "tagline": "Feature-rich BitTorrent client — traffic routed through your Gluetun VPN tunnel.",
+      "category": "Media",
+      "categories": [
+        "media"
+      ],
+      "author": "dieppon",
+      "developer": "qBittorrent project",
+      "architectures": [
+        "amd64",
+        "arm64"
+      ],
+      "icon": "/apps/com.dieppon.qbittorrent-vpn/assets/icon.svg",
+      "thumbnail": "",
+      "compose_url": "/apps/com.dieppon.qbittorrent-vpn/docker-compose.yml",
+      "meta_url": "/apps/com.dieppon.qbittorrent-vpn/meta.json",
+      "content_hash": "195cedec",
+      "version": "5.2.4"
+    },
+    {
+      "id": "com.dieppon.slskd-vpn",
+      "title": "slskd",
+      "tagline": "Soulseek client for sharing and downloading music — routed through your VPN tunnel.",
+      "category": "Media",
+      "categories": [
+        "media"
+      ],
+      "author": "dieppon",
+      "developer": "slskd",
+      "architectures": [
+        "amd64",
+        "arm64"
+      ],
+      "icon": "/apps/com.dieppon.slskd-vpn/assets/icon.png",
+      "thumbnail": "",
+      "compose_url": "/apps/com.dieppon.slskd-vpn/docker-compose.yml",
+      "meta_url": "/apps/com.dieppon.slskd-vpn/meta.json",
+      "content_hash": "e3dcc66c",
+      "version": "0.26.1"
+    },
+    {
+      "id": "com.dieppon.transmission-vpn",
+      "title": "Transmission",
+      "tagline": "Fast, lightweight BitTorrent client — traffic routed through your Gluetun VPN tunnel.",
+      "category": "Media",
+      "categories": [
+        "media"
+      ],
+      "author": "dieppon",
+      "developer": "Transmission Project",
+      "architectures": [
+        "amd64",
+        "arm64"
+      ],
+      "icon": "/apps/com.dieppon.transmission-vpn/assets/icon.png",
+      "thumbnail": "",
+      "compose_url": "/apps/com.dieppon.transmission-vpn/docker-compose.yml",
+      "meta_url": "/apps/com.dieppon.transmission-vpn/meta.json",
+      "content_hash": "f1a0f0cb",
+      "version": "4.1.3"
+    }
+  ]
+}

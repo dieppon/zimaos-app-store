@@ -1,0 +1,42 @@
+name: metadata-docker
+
+services:
+  metadata-docker:
+    image: ghcr.io/jonny-ponny/metadata-docker:1.0.4@sha256:9f53f6c70bd40cb73b38c6fdf614d010864e214317bede5752fff3eed150bc49
+    container_name: metadata-docker
+    environment:
+      # Change the login before exposing this app
+      - AUTH_USERNAME=admin
+      - AUTH_PASSWORD=change-me-asap
+      - TOKEN_EXPIRE_HOURS=24
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+    volumes:
+      # Music library — read/write so metadata edits are saved back
+      - type: bind
+        source: /media/Main-Storage/Media/Music
+        target: /music
+      # Application logs
+      - type: bind
+        source: /DATA/AppData/metadata-docker/logs
+        target: /logs
+      # Metadata fetcher addons (existing plugins or your own)
+      - type: bind
+        source: /DATA/AppData/metadata-docker/addons
+        target: /app/addons
+    ports:
+      - target: "5000"
+        published: "5825"
+        protocol: tcp
+    restart: unless-stopped
+x-casaos:
+  id: com.dieppon.metadata-docker
+  main: metadata-docker
+  index: /
+  scheme: http
+  port_map: "5825"
+  icon: https://dieppa.co.uk/zimaos-app-store/apps/com.dieppon.metadata-docker/assets/icon.png
+  title:
+    en_US: Metadata Docker
+  version: "1.0.4"

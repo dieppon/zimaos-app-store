@@ -1,0 +1,30 @@
+{
+  "tagline": "VPN client container with a killswitch — route other apps' traffic through the tunnel.",
+  "description": "Gluetun is a lightweight Swiss-knife VPN client container. It creates a VPN tunnel (WireGuard or OpenVPN) with a built-in killswitch, HTTP and SOCKS5 proxies, and lets other containers share its network connection so all their traffic goes through the VPN. This package is preconfigured for a custom WireGuard provider and opens the ports needed by the Transmission, qBittorrent and slskd packages in this store. Its built-in control API on port 8000 reports the VPN status and the current public IP.",
+  "tips": {
+    "before_install": "You need WireGuard credentials from your VPN provider (private key, public key, addresses, and server endpoint) — fill them in during install. Install and configure this app before installing the Transmission, qBittorrent or slskd packages from this store, which route their traffic through it. Opening this app loads the VPN's public IP as JSON from the control API (port 8000 — no login needed, the status routes are open on your LAN). Port 8888 is the HTTP proxy, not a web page: test it with curl -x http://<server>:8888 https://api.ipify.org."
+  },
+  "author": "dieppon",
+  "developer": "Quentin McGaw",
+  "category": "Networking",
+  "architectures": [
+    "amd64",
+    "arm64"
+  ],
+  "update_at": "2026-10-18",
+  "website": "https://qdm12.github.io/gluetun/",
+  "repo": "https://github.com/qdm12/gluetun",
+  "docs": "https://github.com/qdm12/gluetun-wiki",
+  "title": "Gluetun VPN",
+  "base_url": "https://dieppa.co.uk/zimaos-app-store",
+  "id": "com.dieppon.gluetun-vpn",
+  "version": "3.41.3",
+  "categories": [
+    "networking"
+  ],
+  "min_memory": 0,
+  "min_image_size": {
+    "amd64": 14744566,
+    "arm64": 14640171
+  }
+}

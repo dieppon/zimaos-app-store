@@ -1,0 +1,52 @@
+name: slskd-vpn
+
+services:
+  slskd:
+    image: slskd/slskd:0.26.1@sha256:85fc466efe1ec2a5fcabbf6aff9775d4030aeccf92e180f853928f7d3fd20e28
+    container_name: slskd
+    user: "1000:1000"
+    # All traffic goes through the Gluetun VPN container — install and
+    # configure "Gluetun VPN" from this store first.
+    network_mode: "container:gluetun"
+    environment:
+      - SLSKD_REMOTE_CONFIGURATION=true
+      # Downloads live under a single mount of the "soulseek" folder, split into
+      # complete/ and incomplete/. Keeping both under one mount means finishing a
+      # download is a rename rather than a copy across filesystems.
+      - SLSKD_DOWNLOADS_DIR=/downloads/complete
+      - SLSKD_INCOMPLETE_DIR=/downloads/incomplete
+      - SLSKD_USERNAME=admin
+      - SLSKD_PASSWORD=change-me-asap
+      - SLSKD_API_KEY=CHANGE-ME-generate-your-own-key
+      # Soulseek network account (register once with e.g. Nicotine+).
+      # Note: values saved in slskd's web UI are written to slskd.yml, and the
+      # YAML file overrides these environment variables.
+      - SLSKD_SLSK_USERNAME=CHANGE-ME-your-soulseek-username
+      - SLSKD_SLSK_PASSWORD=CHANGE-ME-your-soulseek-password
+      # Shared folders, as seen inside the container ("/music" is the store's
+      # read-only mount of /media/Main-Storage/Media/Music). Multiple paths are
+      # separated with ";". Shares saved in the web UI (slskd.yml) override this.
+      - SLSKD_SHARED_DIR=/music
+      - TZ=$TZ
+    volumes:
+      - type: bind
+        source: /DATA/AppData/slskd/app
+        target: /app
+      - type: bind
+        source: /media/Main-Storage/Downloads/soulseek
+        target: /downloads
+      - type: bind
+        source: /media/Main-Storage/Media/Music
+        target: /music
+        read_only: true
+    restart: unless-stopped
+x-casaos:
+  id: com.dieppon.slskd-vpn
+  main: slskd
+  index: /
+  scheme: http
+  port_map: "5030"
+  icon: https://dieppa.co.uk/zimaos-app-store/apps/com.dieppon.slskd-vpn/assets/icon.png
+  title:
+    en_US: slskd
+  version: "0.26.1"

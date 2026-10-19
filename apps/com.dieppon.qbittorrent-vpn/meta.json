@@ -1,0 +1,30 @@
+{
+  "tagline": "Feature-rich BitTorrent client — traffic routed through your Gluetun VPN tunnel.",
+  "description": "qBittorrent is a popular, feature-rich BitTorrent client with a built-in web UI, search engine and RSS support. This package is hotio's build of qBittorrent, routed through the Gluetun VPN container so that all of its traffic (peers, trackers, DHT) leaves from your VPN address instead of your home IP. The Web UI is published by Gluetun on port 8181 and downloads are saved to your Downloads/qbittorrent folder.",
+  "tips": {
+    "before_install": "Install and configure \"Gluetun VPN\" from this store first — this app shares Gluetun's network stack and is unreachable without it. Open the Web UI on http://<server>:8181 and log in as admin; on first start qBittorrent logs a temporary password (some builds default to adminadmin). Change the password and the incoming-connection port (use 6881 to match the port Gluetun opens) right after installing."
+  },
+  "author": "dieppon",
+  "developer": "qBittorrent project",
+  "category": "Media",
+  "architectures": [
+    "amd64",
+    "arm64"
+  ],
+  "update_at": "2026-10-18",
+  "website": "https://www.qbittorrent.org",
+  "repo": "https://github.com/hotio/qbittorrent",
+  "docs": "https://hotio.dev/containers/qbittorrent/",
+  "title": "qBittorrent",
+  "base_url": "https://dieppa.co.uk/zimaos-app-store",
+  "id": "com.dieppon.qbittorrent-vpn",
+  "version": "5.2.4",
+  "categories": [
+    "media"
+  ],
+  "min_memory": 0,
+  "min_image_size": {
+    "amd64": 102469263,
+    "arm64": 103391213
+  }
+}

@@ -1,0 +1,36 @@
+name: transmission-vpn
+
+services:
+  transmission:
+    image: linuxserver/transmission:4.1.3@sha256:4e429c4fb4227af3dbc16afcaaa2ec58a43e8c4a257bac30899873a6a05a1873
+    container_name: transmission
+    # All traffic goes through the Gluetun VPN container — install and
+    # configure "Gluetun VPN" from this store first.
+    network_mode: "container:gluetun"
+    environment:
+      - PEERPORT=51413
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+      - TR_AUTH_REQUIRED=false
+    volumes:
+      - type: bind
+        source: /DATA/AppData/transmission/config
+        target: /config
+      - type: bind
+        source: /media/Main-Storage/Downloads/transmission
+        target: /downloads
+      - type: bind
+        source: /media/Main-Storage/Downloads/transmission/watch
+        target: /watch
+    restart: unless-stopped
+x-casaos:
+  id: com.dieppon.transmission-vpn
+  main: transmission
+  index: /
+  scheme: http
+  port_map: "9091"
+  icon: https://dieppa.co.uk/zimaos-app-store/apps/com.dieppon.transmission-vpn/assets/icon.png
+  title:
+    en_US: Transmission
+  version: "4.1.3"

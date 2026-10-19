@@ -1,0 +1,38 @@
+name: qbittorrent-vpn
+
+services:
+  qbittorrent:
+    image: ghcr.io/hotio/qbittorrent:release-5.2.4@sha256:7317b5a12a5658782d4734fc1ca9bcd1d052ee661d0b2e9c90d91bab433f30b4
+    container_name: qbittorrent-vpn
+    # All traffic goes through the Gluetun VPN container — install and
+    # configure "Gluetun VPN" from this store first.
+    network_mode: "container:gluetun"
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - UMASK=002
+      - TZ=$TZ
+      # The web UI listens on 8181 instead of its default 8080, so that the
+      # port in the browser's Host header matches the port qBittorrent itself
+      # listens on. Its host-header validation rejects any mismatch with
+      # "Unauthorized", which is what a plain 8181:8080 remap produces.
+      # hotio passes this straight to "qbittorrent-nox --webui-port".
+      - WEBUI_PORTS=8181/tcp
+    volumes:
+      - type: bind
+        source: /DATA/AppData/qbittorrent-vpn/config
+        target: /config
+      - type: bind
+        source: /media/Main-Storage/Downloads/qbittorrent
+        target: /downloads
+    restart: unless-stopped
+x-casaos:
+  id: com.dieppon.qbittorrent-vpn
+  main: qbittorrent
+  index: /
+  scheme: http
+  port_map: "8181"
+  icon: https://dieppa.co.uk/zimaos-app-store/apps/com.dieppon.qbittorrent-vpn/assets/icon.svg
+  title:
+    en_US: qBittorrent
+  version: "5.2.4"

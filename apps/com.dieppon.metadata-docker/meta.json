@@ -1,0 +1,30 @@
+{
+  "tagline": "Edit FLAC/MP3 metadata, cover art and lyrics for your music library from the browser.",
+  "description": "A self-hosted web application for editing audio file metadata (FLAC/MP3) and managing a music library. It includes a file browser, a built-in audio player, cover art handling, a synchronized lyrics (LRC) editor, smart renaming from metadata schemes, batch operations with optional recursion into subfolders, and pluggable metadata fetchers (addons) for services like MusicBrainz, VocaDB, LrcLib and Genius. Handy alongside Navidrome or any tagged music collection.",
+  "tips": {
+    "before_install": "Change AUTH_USERNAME/AUTH_PASSWORD before exposing the app. Your library is mounted at /music (read/write — edits are written back to the files), while logs and addons live in /DATA/AppData/metadata-docker/. The web UI listens on port 5825. Make sure PUID/PGID match the owner of your music files."
+  },
+  "author": "dieppon",
+  "developer": "JonnyPonny",
+  "category": "Media",
+  "architectures": [
+    "amd64",
+    "arm64"
+  ],
+  "update_at": "2026-10-17",
+  "website": "https://github.com/Jonny-Ponny/metadata-docker",
+  "repo": "https://github.com/Jonny-Ponny/metadata-docker",
+  "docs": "https://github.com/Jonny-Ponny/metadata-docker#readme",
+  "title": "Metadata Docker",
+  "base_url": "https://dieppa.co.uk/zimaos-app-store",
+  "id": "com.dieppon.metadata-docker",
+  "version": "1.0.4",
+  "categories": [
+    "media"
+  ],
+  "min_memory": 0,
+  "min_image_size": {
+    "amd64": 30271520,
+    "arm64": 31141118
+  }
+}

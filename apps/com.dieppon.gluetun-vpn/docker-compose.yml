@@ -1,0 +1,88 @@
+name: gluetun
+
+services:
+  gluetun:
+    image: qmcgaw/gluetun:v3.41.3@sha256:fa19cc76b2af13d57a8d3dc3066f2ada061b1c761b8aecf989b3877c0486e027
+    container_name: gluetun
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    volumes:
+      - type: bind
+        source: /DATA/AppData/gluetun/data
+        target: /gluetun
+    environment:
+      - VPN_SERVICE_PROVIDER=custom
+      - VPN_TYPE=wireguard
+      - WIREGUARD_IMPLEMENTATION=userspace
+      - DNS_UPSTREAM_RESOLVER_TYPE=plain
+      # Control API: unset, so Gluetun's own defaults apply — the read-only
+      # status routes (public IP, VPN/DNS/updater status, port forward) are open
+      # and the settings routes stay locked. To require a login everywhere
+      # instead, uncomment the following line:
+      # - 'HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE={"auth":"basic","username":"admin","password":"change-me-asap"}'
+      - TZ=$TZ
+      - WIREGUARD_PRIVATE_KEY=<your_WIREGUARD_PRIVATE_KEY>
+      - WIREGUARD_ADDRESSES=<your_WIREGUARD_ADDRESSES>
+      - WIREGUARD_PUBLIC_KEY=<your_WIREGUARD_PUBLIC_KEY>
+      - WIREGUARD_ENDPOINT_IP=<your_WIREGUARD_ENDPOINT_IP>
+      - WIREGUARD_ENDPOINT_PORT=<your_WIREGUARD_ENDPOINT_PORT>
+    ports:
+      - target: "8888"
+        published: "8888"
+        protocol: tcp
+      - target: "8388"
+        published: "8388"
+        protocol: tcp
+      - target: "8388"
+        published: "8388"
+        protocol: udp
+      # Control API — VPN status and public IP (this is the app's dashboard entry)
+      - target: "8000"
+        published: "8000"
+        protocol: tcp
+      # Opened for Transmission:
+      - target: "9091"
+        published: "9091"
+        protocol: tcp
+      - target: "51413"
+        published: "51413"
+        protocol: tcp
+      - target: "51413"
+        published: "51413"
+        protocol: udp
+      # Opened for qBittorrent — same port in and out on purpose: qBittorrent's
+      # web UI rejects any request whose Host header port differs from the port
+      # it listens on, so it runs its web UI on 8181 too (see WEBUI_PORTS there):
+      - target: "8181"
+        published: "8181"
+        protocol: tcp
+      - target: "6881"
+        published: "6881"
+        protocol: tcp
+      - target: "6881"
+        published: "6881"
+        protocol: udp
+      # Opened for slskd:
+      - target: "5030"
+        published: "5030"
+        protocol: tcp
+      - target: "5031"
+        published: "5031"
+        protocol: tcp
+      - target: "50300"
+        published: "50300"
+        protocol: tcp
+    restart: unless-stopped
+x-casaos:
+  id: com.dieppon.gluetun-vpn
+  main: gluetun
+  index: /v1/publicip/ip
+  scheme: http
+  port_map: "8000"
+  icon: https://dieppa.co.uk/zimaos-app-store/apps/com.dieppon.gluetun-vpn/assets/icon.png
+  title:
+    en_US: Gluetun VPN
+  version: "3.41.3"

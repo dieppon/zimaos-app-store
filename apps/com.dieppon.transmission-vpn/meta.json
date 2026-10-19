@@ -1,0 +1,30 @@
+{
+  "tagline": "Fast, lightweight BitTorrent client — traffic routed through your Gluetun VPN tunnel.",
+  "description": "Transmission is a simple, lightweight BitTorrent client with a web UI. This package routes all of its network traffic through the Gluetun VPN container (network mode: container:gluetun) so your torrents go through your VPN, and it relies on the torrent ports opened on Gluetun.",
+  "tips": {
+    "before_install": "Requires the \"Gluetun VPN\" app from this store to be installed and configured first — this app's traffic depends on it. Downloads are saved to /media/Main-Storage/Downloads/transmission. The web UI is reachable on port 9091, which Gluetun publishes."
+  },
+  "author": "dieppon",
+  "developer": "Transmission Project",
+  "category": "Media",
+  "architectures": [
+    "amd64",
+    "arm64"
+  ],
+  "update_at": "2026-10-17",
+  "website": "https://transmissionbt.com",
+  "repo": "https://github.com/transmission/transmission",
+  "docs": "https://transmissionbt.com/help/",
+  "title": "Transmission",
+  "base_url": "https://dieppa.co.uk/zimaos-app-store",
+  "id": "com.dieppon.transmission-vpn",
+  "version": "4.1.3",
+  "categories": [
+    "media"
+  ],
+  "min_memory": 0,
+  "min_image_size": {
+    "amd64": 34429008,
+    "arm64": 34429008
+  }
+}

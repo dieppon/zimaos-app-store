@@ -1,0 +1,30 @@
+{
+  "tagline": "Soulseek client for sharing and downloading music — routed through your VPN tunnel.",
+  "description": "slskd is a modern, self-hosted Soulseek client with a web UI, built for always-on sharing. This package routes all of its network traffic through the Gluetun VPN container, shares your music library read-only, and downloads to your Soulseek folder.",
+  "tips": {
+    "before_install": "Requires the \"Gluetun VPN\" app from this store to be installed and configured first. Change the admin password and API key in the environment variables before or right after installing, and enter your Soulseek network account (SLSKD_SLSK_USERNAME / SLSKD_SLSK_PASSWORD) — register it once with another client such as Nicotine+. The web UI is reachable on port 5030, which Gluetun publishes."
+  },
+  "author": "dieppon",
+  "developer": "slskd",
+  "category": "Media",
+  "architectures": [
+    "amd64",
+    "arm64"
+  ],
+  "update_at": "2026-10-17",
+  "website": "https://slskd.org",
+  "repo": "https://github.com/slskd/slskd",
+  "docs": "https://github.com/slskd/slskd#readme",
+  "title": "slskd",
+  "base_url": "https://dieppa.co.uk/zimaos-app-store",
+  "id": "com.dieppon.slskd-vpn",
+  "version": "0.26.1",
+  "categories": [
+    "media"
+  ],
+  "min_memory": 0,
+  "min_image_size": {
+    "amd64": 110342833,
+    "arm64": 110342833
+  }
+}
