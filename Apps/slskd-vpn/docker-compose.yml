@@ -10,20 +10,33 @@ services:
     network_mode: "container:gluetun"
     environment:
       - SLSKD_REMOTE_CONFIGURATION=true
-      - SLSKD_DOWNLOADS_DIR=/downloads
+      # Downloads live under a single mount of the "soulseek" folder, split into
+      # complete/ and incomplete/. Keeping both under one mount means finishing a
+      # download is a rename rather than a copy across filesystems.
+      - SLSKD_DOWNLOADS_DIR=/downloads/complete
+      - SLSKD_INCOMPLETE_DIR=/downloads/incomplete
       - SLSKD_USERNAME=admin
       - SLSKD_PASSWORD=change-me-asap
       - SLSKD_API_KEY=CHANGE-ME-generate-your-own-key
+      # Soulseek network account (register once with e.g. Nicotine+).
+      # Note: values saved in slskd's web UI are written to slskd.yml, and the
+      # YAML file overrides these environment variables.
+      - SLSKD_SLSK_USERNAME=CHANGE-ME-your-soulseek-username
+      - SLSKD_SLSK_PASSWORD=CHANGE-ME-your-soulseek-password
+      # Shared folders, as seen inside the container ("/music" is the store's
+      # read-only mount of /media/Main-Storage/Media/Music). Multiple paths are
+      # separated with ";". Shares saved in the web UI (slskd.yml) override this.
+      - SLSKD_SHARED_DIR=/music
       - TZ=$TZ
     volumes:
       - type: bind
         source: /DATA/AppData/slskd/app
         target: /app
       - type: bind
-        source: /media/Main-Storage/Downloads/Soulseek
+        source: /media/Main-Storage/Downloads/soulseek
         target: /downloads
       - type: bind
-        source: /media/Main-Storage/Music
+        source: /media/Main-Storage/Media/Music
         target: /music
         read_only: true
     restart: unless-stopped
@@ -38,6 +51,21 @@ services:
         - container: SLSKD_API_KEY
           description:
             en_US: "API key (generate your own random key)"
+        - container: SLSKD_SLSK_USERNAME
+          description:
+            en_US: "Soulseek network username (register an account with another client first)"
+        - container: SLSKD_SLSK_PASSWORD
+          description:
+            en_US: "Soulseek network password"
+        - container: SLSKD_SHARED_DIR
+          description:
+            en_US: "Folders to share (container paths; /music = your Music library)"
+        - container: SLSKD_DOWNLOADS_DIR
+          description:
+            en_US: "Completed downloads (container path; /downloads/complete)"
+        - container: SLSKD_INCOMPLETE_DIR
+          description:
+            en_US: "In-progress downloads (container path; /downloads/incomplete)"
         - container: SLSKD_REMOTE_CONFIGURATION
           description:
             en_US: "Configure the app from the web UI instead of config files"
@@ -50,7 +78,7 @@ services:
             en_US: "slskd application data and configuration"
         - container: /downloads
           description:
-            en_US: "Where downloads are saved"
+            en_US: "Downloads folder (contains complete/ and incomplete/)"
         - container: /music
           description:
             en_US: "Music library shared with the network (read-only)"
@@ -78,7 +106,9 @@ x-casaos:
       en_US: >-
         Requires the "Gluetun VPN" app from this store to be installed and
         configured first. Change the admin password and API key in the
-        environment variables before or right after installing. The web UI is
+        environment variables before or right after installing, and enter your
+        Soulseek network account (SLSKD_SLSK_USERNAME / SLSKD_SLSK_PASSWORD) —
+        register it once with another client such as Nicotine+. The web UI is
         reachable on port 5030, which Gluetun publishes.
   author: dieppon
   developer: slskd
